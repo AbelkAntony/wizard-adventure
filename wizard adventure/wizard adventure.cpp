@@ -5,10 +5,10 @@ class Character
 {
 private:
 	int agility;
-protected:
 	int baseDefence;
-	int defence;
 	int baseDamagePoint;
+protected:
+	int defence;
 	int damagePoint;
 	int experiencePoint;
 	int level;
@@ -27,23 +27,16 @@ public:
 		baseDefence = defence;
 		this->agility = agility;
 	}
-	void SetDamage()
-	{
-		damagePoint = damagePoint + (baseDamagePoint * (level / 100));
-	}
 
-	void SetDefence()
-	{
-		defence = defence + (baseDefence * (level / 100));
-	}
+
+	void SetDamage() { damagePoint = damagePoint + (baseDamagePoint * (level / 100)); }
+	void SetDefence() { defence = defence + (baseDefence * (level / 100)); }
 
 	virtual string GetName() { return name; }
-
 	int GetHealth() { return currentHealth; }
-
 	int GetDamage() { return damagePoint; }
-
 	int GetAgility() { return agility; }
+	int GetLevel() { return level; }
 
 	virtual void TakeDamage(int _damage)
 	{
@@ -60,11 +53,11 @@ public:
 		cout << "LEVEL : " << level << endl;
 	}
 
-	int GetLevel() { return level; }
+
 
 	void DisplayHealthStatus() { cout << endl << name << "'s health : " << currentHealth; }
 
-	virtual void Heal() = 0;
+	virtual void Heal() {}
 
 	virtual int RunAwayFromAttack(Character* character1, Character* character2)
 	{
@@ -118,9 +111,9 @@ public:
 	}
 
 	int GetCoin() { return coin; }
+	int GetPortion() { return healthPortion; }
 
 	void SetCoin(int value) { coin = coin - value; }
-
 	void SetHealthPortion() { healthPortion++; }
 
 	void TakeCoins(int _level)
@@ -157,7 +150,7 @@ public:
 			cout << "YOU DO NOT HAVE ANY HEALTH PORTION TO HEAL";
 		}
 	}
-	int GetPortion() { return healthPortion; }
+
 
 	void SetLevel()
 	{
@@ -208,20 +201,8 @@ public:
 	}
 	void Heal()
 	{
-		if (maxHealth == currentHealth)
-			cout << endl << name << "'s health is already full\n";
-		else if (currentHealth + healing > maxHealth)
-		{
-			int tempHeal;
-			tempHeal = (maxHealth - currentHealth);
-			currentHealth += tempHeal;
-			cout << "/n" << name << "'s health is added by " << tempHeal;
-		}
-		else
-		{
-			currentHealth += healing;
-			cout << "\n" << name << "'s health is added by " << healing;
-		}
+		currentHealth += healing;
+		cout << "\n" << name << "'s health is added by " << healing;
 	}
 
 	void SetLevel(int _level, int area)
@@ -285,10 +266,6 @@ private:
 				player->Heal();
 			}
 		}
-		else
-		{
-
-		}
 	}
 	void DisplayGameTitle()
 	{
@@ -301,40 +278,24 @@ private:
 		{
 		case 1:
 			enemy = new Dragon("Adelaid", 100, 15, 10, 5);
-			if (levelOfPlayer <= area)
-				enemy->SetLevel(area);
-			else if (levelOfPlayer > area)
-				enemy->SetLevel(levelOfPlayer, area);
 			break;
 		case 2:
 			enemy = new Dragon("Smite", 125, 30, 15, 5);
 			area = 21;
-			if (levelOfPlayer <= area)
-				enemy->SetLevel(area);
-			else if (levelOfPlayer > area)
-				enemy->SetLevel(levelOfPlayer, area);
 			break;
 		case 3:
 			enemy = new Dragon("Arman", 150, 40, 20, 5);
 			area = 41;
-			if (levelOfPlayer <= area)
-				enemy->SetLevel(area);
-			else if (levelOfPlayer > area)
-				enemy->SetLevel(levelOfPlayer, area);
 			break;
 		case 4:
 			enemy = new Dragon("Darksmoke", 200, 45, 25, 5);
 			area = 61;
-			if (levelOfPlayer <= area)
-				enemy->SetLevel(area);
-			else if (levelOfPlayer > area)
-				enemy->SetLevel(levelOfPlayer, area);
-			break;
-		default:
 			break;
 		}
-
-
+		if (levelOfPlayer <= area)
+			enemy->SetLevel(area);
+		else if (levelOfPlayer > area)
+			enemy->SetLevel(levelOfPlayer, area);
 	}
 
 	void PlayerCharacterCreation()
@@ -448,7 +409,6 @@ private:
 		if (player->GetHealth() <= 0)
 		{
 			int choise;
-
 			cout << "\nYOU LOSE THE BATTLE";
 			cout << endl << reviveValue << " Points to Revive \n1. Yes\n2. No\nEnter your choise";
 			cin >> choise;
@@ -581,12 +541,11 @@ private:
 		int option;
 		while (true)
 		{
-			cout << "\nDO YOU WANT TO EXPLORE NEW AREA IN WORLD OF DRAGONS\n1. YES\n2. NO\nENTER YOUR CHOISE : ";
+			cout << "\nDO YOU WANT TO EXPLORE NEW AREA IN WORLD OF DRAGONS\n1. YES\n2. NO\nENTER YOUR CHOISE: ";
 			cin >> option;
 			switch (option)
 			{
 			case 1:
-
 				run = Explore();
 				break;
 			case 2:
@@ -602,7 +561,7 @@ private:
 					return 1;
 				}
 			default:
-				cout << "ENTERED OPTION IS NOT AVAILABLE SO CHOOSING DEFAULT OPTION NO";
+				cout << "ENTERED OPTION IS NOT AVAILABLE SO CHOOSING DEFAULT OPTION NO\n";
 				return 1;
 				break;
 			}
