@@ -3,11 +3,10 @@ using namespace std;
 
 class Character
 {
-private:
+protected:
 	int agility;
 	int baseDefence;
 	int baseDamagePoint;
-protected:
 	int defence;
 	int damagePoint;
 	int experiencePoint;
@@ -16,18 +15,17 @@ protected:
 	int maxHealth;
 	int currentHealth;
 public:
-	Character(string name, int health, int damagePoint, int defence, int agility)
-	{
-		this->name = name;
-		this->maxHealth = health;
-		this->currentHealth = health;
-		this->damagePoint = damagePoint;
-		baseDamagePoint = damagePoint;
-		this->defence = defence;
-		baseDefence = defence;
-		this->agility = agility;
-	}
 
+	Character(string _name, int _health, int _damagePoint, int _defence, int _agility)
+	{
+		name = _name;
+		maxHealth = _health;
+		currentHealth = _health;
+		damagePoint = _damagePoint;
+		baseDamagePoint = _damagePoint;
+		defence = _defence;
+		agility = _agility;
+	}
 
 	void SetDamage() { damagePoint = damagePoint + (baseDamagePoint * (level / 100)); }
 	void SetDefence() { defence = defence + (baseDefence * (level / 100)); }
@@ -37,12 +35,12 @@ public:
 	int GetDamage() { return damagePoint; }
 	int GetAgility() { return agility; }
 	int GetLevel() { return level; }
+	int GetDefence() { return defence; }
 
-	virtual void TakeDamage(int _damage)
+	virtual void TakeDamage(int damage)
 	{
-		int damage = (_damage - defence);
 		currentHealth = currentHealth - damage;
-		cout << "\nCause damage : " << _damage << endl;
+		cout << "\nCause damage : " << damage << endl;
 	}
 	virtual	void DisplayAllStatus()
 	{
@@ -53,9 +51,13 @@ public:
 		cout << "LEVEL : " << level << endl;
 	}
 
-
-
-	void DisplayHealthStatus() { cout << endl << name << "'s health : " << currentHealth; }
+	void DisplayHealthStatus()
+	{
+		if (currentHealth <= 0)
+			cout << endl << name << "'s health : 0\n";
+		else
+			cout << endl << name << "'s health : " << currentHealth;
+	}
 
 	virtual void Heal() {}
 
@@ -79,6 +81,7 @@ public:
 	}
 };
 
+
 class Wizard : public Character
 {
 private:
@@ -90,8 +93,9 @@ private:
 	int randomHealing;
 	int xpLimit = 5;
 public:
-	Wizard(string name) :Character(name, 100, 35, 10, 10)
+	Wizard(string _name, int _health, int _damagePoint, int _defence, int _agility) : Character(_name, _health, _damagePoint, _defence, _agility)
 	{
+
 		level = 1;
 		experiencePoint = 0;
 		baseCoin = 100;
@@ -107,7 +111,7 @@ public:
 		cout << "LEVEL : " << level << endl;
 		cout << "XP : " << experiencePoint << "/" << xpLimit << endl;
 		cout << "HEALING PORTION :" << healthPortion << endl;
-		cout << "COINS : " << coin;
+		cout << "COINS : " << coin << endl;
 	}
 
 	int GetCoin() { return coin; }
@@ -118,7 +122,9 @@ public:
 
 	void TakeCoins(int _level)
 	{
-		coin = coin + baseCoin * ((_level * 10) / 100);
+		int _coin = baseCoin * _level;
+		coin += _coin;
+		cout << "\nYou got " << _coin << "coins\n";
 	}
 
 	void Heal()
@@ -169,13 +175,17 @@ public:
 	{
 		int tempXp;
 		int tempLevel = level - enemylevel;
-		if (tempLevel == -3)
+		if (tempLevel <= 0)
 		{
 			srand(time(0));
 			tempXp = (rand() % (5 - 1 + 1)) + 1;
-			experiencePoint = tempXp;
+			experiencePoint += tempXp;
 			cout << "Your XP increase by :" << tempXp;
 			SetLevel();
+		}
+		else
+		{
+			experiencePoint += enemylevel;
 		}
 	}
 	void SetXp(int xp, int _xp)
@@ -184,20 +194,20 @@ public:
 		cout << "Your XP increase by :" << xp;
 		SetLevel();
 	}
+
 	~Wizard() {}
 };
 
 class Dragon : public Character
 {
-private:
+protected:
 	int healthPortionDropPercentage;
 	int healing;
 public:
-	Dragon(string name, int health, int damagePoint, int defence, int agility) :Character(name, health, damagePoint, defence, agility)
+	Dragon(string _name, int _health, int _damagePoint, int _defence, int _agility, int _healthPortionDropPercentage, int _healing) : Character(_name, _health, _damagePoint, _defence, _agility)
 	{
-		srand(time(0));
-		healthPortionDropPercentage = 25;
-		healing = 30;
+		healthPortionDropPercentage = _healthPortionDropPercentage;
+		healing = _healing;
 	}
 	void Heal()
 	{
@@ -225,6 +235,7 @@ public:
 			SetDefence();
 		}
 	}
+
 	void SetLevel(int _level)
 	{
 		level = _level;
@@ -237,6 +248,117 @@ public:
 	~Dragon() {}
 };
 
+class Inferno : public Dragon
+{
+public:
+	Inferno() : Dragon("Adelaid-Inferno", 100, 15, 10, 5, 50, 30) {}
+
+};
+
+class Aqua : public Dragon
+{
+public:
+	Aqua() : Dragon("Smite-Aqua", 125, 30, 15, 5, 30, 40) {}
+
+};
+
+class Terra : public Dragon
+{
+public:
+	Terra() : Dragon("Arman-Terra", 150, 40, 20, 5, 30, 35) {}
+
+};
+
+class Shadow : public Dragon
+{
+public:
+	Shadow() : Dragon("Darksmoke-Shadow", 200, 45, 25, 5, 40, 45) {}
+
+};
+
+class AAttack
+{
+private:
+	int fireball = 0;
+	int waterGun = 0;
+	int earthquake = 0;
+	int rejuvenate = 0;
+	int solarBeam = 0;
+public:
+	//getter
+	int	GetSolarBeam() { return solarBeam; }
+	int GetRejuvenate() { return rejuvenate; }
+	int GetEarthquake() { return earthquake; }
+	int GetWaterGun() { return waterGun; }
+	int GetFireball() { return fireball; }
+	//setter
+	void SetSolarBeam() { solarBeam = 1; }
+	void SetRejuvenate() { rejuvenate = 1; }
+	void SetEarthquake() { earthquake = 1; }
+	void SetWaterGun() { waterGun = 1; }
+	void SetFireball() { fireball = 1; }
+
+	int Attack(char choise)
+	{
+		if (solarBeam == 1)
+		{
+			if (choise == 'S' || choise == 's')
+			{
+				return 4;
+			}
+		}
+		if (rejuvenate == 1)
+		{
+			if (choise == 'R' || choise == 'r')
+			{
+				return 0;
+			}
+		}
+		if (earthquake == 1)
+		{
+			if (choise == 'E' || choise == 'e')
+			{
+				return 1;
+			}
+		}
+		if (waterGun == 1)
+		{
+			if (choise == 'W' || choise == 'w')
+			{
+				return 2;
+			}
+		}
+		if (fireball == 1)
+		{
+			if (choise == 'F' || choise == 'f')
+			{
+				return 4;
+			}
+		}
+		return 1;
+	}
+	int Attack()
+	{
+		return 2;
+	}
+
+	void DisplayAttack()
+	{
+		cout << "FOR NORMAL ATTACK  PRESS  N\n";
+		if (solarBeam == 1)
+			cout << "FOR SOLAR BEAM ATTACK PRESS  S\n";
+		if (rejuvenate == 1)
+			cout << "FOR REJIVENATE ATTACK PRESS  R\n";
+		if (earthquake == 1)
+			cout << "FOR EARTHQUAKE ATTACK PRESS  E\n";
+		if (waterGun == 1)
+			cout << "FOR WATER GUN ATTACK  PRESS  W\n";
+		if (fireball == 1)
+			cout << "FOR FIRE BALL ATTACK  PRESS  F\n";
+	}
+
+};
+
 class GamePlay
 {
 private:
@@ -245,9 +367,12 @@ private:
 	int reviveValue = 70;
 	int round;
 	int damage;
+	AAttack* playerAttack = new AAttack();
+	AAttack* enemyAttack = new AAttack();
 	Wizard* player;
 	Dragon* enemy;
 	string name;
+	int specialAttack = 1;
 	//function
 	void healthPortionDropingByEnemy()
 	{
@@ -277,18 +402,22 @@ private:
 		switch (area)
 		{
 		case 1:
-			enemy = new Dragon("Adelaid", 100, 15, 10, 5);
+			enemy = new Inferno();
+			enemyAttack->Attack(2);
 			break;
 		case 2:
-			enemy = new Dragon("Smite", 125, 30, 15, 5);
+			enemy = new Aqua();
+			enemyAttack->Attack(2);
 			area = 21;
 			break;
 		case 3:
-			enemy = new Dragon("Arman", 150, 40, 20, 5);
+			enemy = new Terra();
+			enemyAttack->Attack(2);
 			area = 41;
 			break;
 		case 4:
-			enemy = new Dragon("Darksmoke", 200, 45, 25, 5);
+			enemy = new Shadow();
+			enemyAttack->Attack(2);
 			area = 61;
 			break;
 		}
@@ -302,14 +431,14 @@ private:
 	{
 		cout << "ENTER YOUR NAME : ";
 		cin >> name;
-		player = new Wizard(name);
+		player = new Wizard(name, 100, 35, 10, 10);
 	}
 
 	void DisplayAllDetailsOfCharacters()
 	{
 		cout << "\nPLAYER\n";
 		player->DisplayAllStatus();
-		cout << "\nENEMY\n";
+		cout << "\n\nENEMY\n";
 		enemy->DisplayAllStatus();
 	}
 	void HealthStatus()
@@ -324,8 +453,8 @@ private:
 		int health10Percentage = (enemy->GetHealth()) * .1;
 		if (enemy->GetHealth() > health20Percentage)
 		{
-			damage = enemy->GetDamage();
-			player->TakeDamage(damage);
+			specialAttack = enemyAttack->Attack();
+			Damage(enemy, player, specialAttack, 'a');
 		}
 		else if (enemy->GetHealth() < health20Percentage && enemy->GetHealth() > health10Percentage)
 		{
@@ -347,8 +476,38 @@ private:
 		return run;
 	}
 
+	void Damage(Character* character1, Character* character2, int specialAttack, char attack)
+	{
+		if (enemy->GetName() == "Adelaid-Inferno" && (attack == 'E' || attack == 'e'))
+		{
+			int damage = (character1->GetDamage()) - character2->GetDefence();
+			character2->TakeDamage(damage);
+		}
+		else if (enemy->GetName() == "Smite-Aqua" && (attack == 'F' || attack == 'f'))
+		{
+			int damage = (character1->GetDamage()) - character2->GetDefence();
+			character2->TakeDamage(damage);
+		}
+		else if (enemy->GetName() == "Darksmoke-Shadow" && (attack == 'S' || attack == 's'))
+		{
+			int damage = (character1->GetDamage()) - character2->GetDefence();
+			character2->TakeDamage(damage);
+		}
+		else if (enemy->GetName() == "Arman-Terra" && (attack == 'W' || attack == 'w'))
+		{
+			int damage = (character1->GetDamage()) - character2->GetDefence();
+			character2->TakeDamage(damage);
+		}
+		else
+		{
+			int damage = (character1->GetDamage() * specialAttack) - character2->GetDefence();
+			character2->TakeDamage(damage);
+		}
+	}
+
 	int PlayerGameRound()
 	{
+
 		cout << endl << player->GetName() << "'s Turn choose your option\n";
 		int option;
 		cout << "\n1. Attack\n2. Heal\n3. Run\nEnter your option : ";
@@ -356,8 +515,15 @@ private:
 		switch (option)
 		{
 		case 1:
-			damage = player->GetDamage();
-			enemy->TakeDamage(damage);
+			char choise;
+			playerAttack->DisplayAttack();
+			cin >> choise;
+			if (choise == 'R' || choise == 'r')
+				player->Heal();
+			specialAttack = playerAttack->Attack(choise);
+			Damage(player, enemy, specialAttack, choise);
+			if (enemy->GetHealth() <= 0)
+				return 0;
 			break;
 		case 2:
 			player->Heal();
@@ -377,9 +543,10 @@ private:
 			cout << "\nENTERED OPTION IS NOT AVAILABLE SO CHOOSING DEFAULT OPTION ATTACK";
 			damage = player->GetDamage();
 			enemy->TakeDamage(damage);
+			run = 0;
 		}
 		HealthStatus();
-		return run;
+		return 0;
 	}
 	int CharacterTurnDecider()
 	{
@@ -388,18 +555,26 @@ private:
 			run = PlayerGameRound();
 			if (run == 1)
 				return run;
+			if (enemy->GetHealth() <= 0)
+				return 0;
 			run = EnemyGameRound();
 			if (run == 1)
 				return run;
+			if (player->GetHealth() <= 0)
+				return 0;
 		}
 		else
 		{
 			run = EnemyGameRound();
 			if (run == 1)
 				return run;
+			if (player->GetHealth() <= 0)
+				return 0;
 			run = PlayerGameRound();
 			if (run == 1)
 				return run;
+			if (enemy->GetHealth() <= 0)
+				return 0;
 		}
 		return run;
 	}
@@ -452,18 +627,75 @@ private:
 		return run;
 	}
 
+	void SpellBook()
+	{
+		srand(time(0));
+		int option = rand() % 5 + 1;
+		int spellUnlockValue;
+
+
+		switch (option)
+		{
+		case 1:
+			cout << "You Learn a attacking Using Fireball";
+			playerAttack->SetFireball();
+			break;
+		case 2:
+			cout << "You Learn a attacking Using Water gun";
+			spellUnlockValue = 2;
+			playerAttack->SetWaterGun();
+			break;
+		case 3:
+			cout << "You Learn a attacking Using Earthquake";
+			playerAttack->SetEarthquake();
+			break;
+		case 4:
+			cout << "You Learn a attacking Using Rejuvenate";
+			playerAttack->SetRejuvenate();
+			break;
+		case 5:
+			cout << "You Learn a attacking Using Solar beam";
+			playerAttack->SetSolarBeam();
+			break;
+		}
+	}
+
 	void ShopPurchase(int option)
 	{
 		switch (option)
 		{
 		case 1:
-			player->SetXp(100, 1);
-			player->SetCoin(50);
+			if ((player->GetCoin() - 50) > 0)
+			{
+				player->SetXp(100, 1);
+				player->SetCoin(50);
+			}
+			else
+			{
+				cout << "You don't have enough coin";
+			}
 			break;
 		case 2:
-			player->SetHealthPortion();
-			player->SetCoin(50);
+			if ((player->GetCoin() - 10) > 0)
+			{
+				player->SetHealthPortion();
+				player->SetCoin(10);
+			}
+			else
+			{
+				cout << "You don't have enough coin";
+			}
 			break;
+		case 3:
+			if ((player->GetCoin() - 100) > 0)
+			{
+				SpellBook();
+				player->SetCoin(100);
+			}
+			else
+			{
+				cout << "You don't have enough coin";
+			}
 		default:
 			break;
 		}
@@ -472,9 +704,11 @@ private:
 	int DisplayItemsInShop()
 	{
 		int option;
+		cout << "AVAILABLE COINS :" << player->GetCoin();
 		cout << "\n1. XP potions (100xp) \n Price = 50 coins";
 		cout << "\n\n2. HP portion (1 Portion) Price = 10 coins";
-		cout << "\n\n3. Exit shop\n";
+		cout << "\n3. Spell Book  Price = 100 coins";
+		cout << "\n\n4. Exit shop\n";
 		cin >> option;
 		return option;
 	}
@@ -482,9 +716,9 @@ private:
 	void Shop()
 	{
 		int option = 0;
-		while (option != 3)
+		cout << "\nYou discover a Shop\n";
+		while (option != 4)
 		{
-			cout << "\nYou discover a Shop\n";
 			option = DisplayItemsInShop();
 			ShopPurchase(option);
 		}
@@ -541,7 +775,7 @@ private:
 		int option;
 		while (true)
 		{
-			cout << "\nDO YOU WANT TO EXPLORE NEW AREA IN WORLD OF DRAGONS\n1. YES\n2. NO\nENTER YOUR CHOISE: ";
+			cout << "\nDO YOU WANT TO EXPLORE NEW AREA \n1. YES\n2. NO\nENTER YOUR CHOISE: ";
 			cin >> option;
 			switch (option)
 			{
@@ -558,7 +792,7 @@ private:
 				}
 				else if (secondoption == 1)
 				{
-					return 1;
+					return 0;
 				}
 			default:
 				cout << "ENTERED OPTION IS NOT AVAILABLE SO CHOOSING DEFAULT OPTION NO\n";
