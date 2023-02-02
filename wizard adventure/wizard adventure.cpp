@@ -70,12 +70,12 @@ public:
 		chance = rand() % 100;
 		if (chance <= percentageOfAgility)
 		{
-			cout << name << " RUN AWAY\n";
+			cout << name << " \nRUN AWAY\n";
 			return 1;
 		}
 		else
 		{
-			cout << name << " TRY'S TO RAN AWAY SORRY BUT CAN'T RAN AWAY \n";
+			cout << name << "\n TRY'S TO RAN AWAY SORRY BUT CAN'T RAN AWAY \n";
 			return 0;
 		}
 	}
@@ -704,9 +704,9 @@ private:
 	int DisplayItemsInShop()
 	{
 		int option;
-		cout << "AVAILABLE COINS :" << player->GetCoin();
-		cout << "\n1. XP potions (100xp) \n Price = 50 coins";
-		cout << "\n\n2. HP portion (1 Portion) Price = 10 coins";
+		cout << "\nAVAILABLE COINS :" << player->GetCoin();
+		cout << "\n1. XP potions (100xp)  Price = 50 coins";
+		cout << "\n2. HP portion (1 Portion) Price = 10 coins";
 		cout << "\n3. Spell Book  Price = 100 coins";
 		cout << "\n\n4. Exit shop\n";
 		cin >> option;
@@ -736,11 +736,11 @@ private:
 			switch (item)
 			{
 			case 0:
-				cout << "You get XP" << endl;
+				cout << "\nYou get XP" << endl;
 				player->SetXp(player->GetLevel());
 				break;
 			case 1:
-				cout << "You got Healing Portion" << endl;
+				cout << "\nYou got Healing Portion" << endl;
 				player->SetHealthPortion();
 				break;
 			}
@@ -795,7 +795,7 @@ private:
 					return 0;
 				}
 			default:
-				cout << "ENTERED OPTION IS NOT AVAILABLE SO CHOOSING DEFAULT OPTION NO\n";
+				cout << "\nENTERED OPTION IS NOT AVAILABLE SO CHOOSING DEFAULT OPTION NO\n";
 				return 1;
 				break;
 			}
@@ -830,7 +830,7 @@ private:
 	}
 	void DisplayStoryOfWizardAdventure()
 	{
-		cout << "Hi Chef,\nYou are a king in your world.\nThe last war was with the God of DRAGON's\nUnfortunatly you lose your battle. \nSad part is that they kidnap your QUEEN \nYou decided to go to the God of DRAGON's world.  \nFind your QUEEN and bring her back to your MANISON\nBe a warrior and figth till you find your QUEEN\n\nGOOD LUCK CHEF";
+		cout << "\nHi Chef,\nYou are a king in your world.\nThe last war was with the God of DRAGON's\nUnfortunatly you lose your battle. \nSad part is that they kidnap your QUEEN \nYou decided to go to the God of DRAGON's world.  \nFind your QUEEN and bring her back to your MANISON\nBe a warrior and figth till you find your QUEEN\n\nGOOD LUCK CHEF\n";
 	}
 public:
 	void WizardAdventure()
