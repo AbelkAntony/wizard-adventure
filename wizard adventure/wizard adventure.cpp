@@ -3,7 +3,7 @@ using namespace std;
 
 class Character
 {
-protected:
+private:
 	int agility;
 	int baseDefence;
 	int baseDamagePoint;
@@ -26,18 +26,23 @@ public:
 		defence = _defence;
 		agility = _agility;
 	}
-
+	void SetLevel(int _level) { level = level + _level; }
 	void SetDamage() { damagePoint = damagePoint + (baseDamagePoint * (level / 100)); }
 	void SetDefence() { defence = defence + (baseDefence * (level / 100)); }
+	void SetXP(int xp) { experiencePoint = xp; }
+	void SetCurrentHealth(int heal) { currentHealth += heal; }
 
-	virtual string GetName() { return name; }
+	string GetName() { return name; }
 	int GetHealth() { return currentHealth; }
 	int GetDamage() { return damagePoint; }
 	int GetAgility() { return agility; }
 	int GetLevel() { return level; }
 	int GetDefence() { return defence; }
+	int GetMaxHealth() { return maxHealth; }
+	int GetXP() { return experiencePoint; }
+	int GetCurrentHealth() { return currentHealth; }
 
-	virtual void TakeDamage(int damage)
+	void TakeDamage(int damage)
 	{
 		currentHealth = currentHealth - damage;
 		cout << "\nCause damage : " << damage << endl;
@@ -61,24 +66,7 @@ public:
 
 	virtual void Heal() {}
 
-	virtual int RunAwayFromAttack(Character* character1, Character* character2)
-	{
-		int totalAgility = character1->GetAgility() + character2->GetAgility();
-		int percentageOfAgility = (character1->GetAgility() * 100) / totalAgility;
-		int chance;
-		srand(time(0));
-		chance = rand() % 100;
-		if (chance <= percentageOfAgility)
-		{
-			cout << name << " \nRUN AWAY\n";
-			return 1;
-		}
-		else
-		{
-			cout << name << "\n TRY'S TO RAN AWAY SORRY BUT CAN'T RAN AWAY \n";
-			return 0;
-		}
-	}
+
 };
 
 
@@ -88,28 +76,28 @@ private:
 	int baseCoin;
 	int coin;
 	int healthPortion = 0;
-	int healingLowerLimit = maxHealth * .2;
-	int healingUpperlimit = maxHealth * .4;
+	int healingLowerLimit = GetMaxHealth() * .2;
+	int healingUpperlimit = GetMaxHealth() * .4;
 	int randomHealing;
 	int xpLimit = 5;
 public:
 	Wizard(string _name, int _health, int _damagePoint, int _defence, int _agility) : Character(_name, _health, _damagePoint, _defence, _agility)
 	{
 
-		level = 1;
-		experiencePoint = 0;
+		SetLevel(1);
+		SetXP(0);
 		baseCoin = 100;
 		coin = 100;
 	}
 
 	void DisplayAllStatus()
 	{
-		cout << "NAME : " << name << endl;
-		cout << "HEALTH : " << maxHealth << endl;
-		cout << "DAMAGE POINT : " << damagePoint << endl;
-		cout << "DEFENCE POWER : " << defence << endl;
-		cout << "LEVEL : " << level << endl;
-		cout << "XP : " << experiencePoint << "/" << xpLimit << endl;
+		cout << "NAME : " << GetName() << endl;
+		cout << "HEALTH : " << GetMaxHealth() << endl;
+		cout << "DAMAGE POINT : " << GetDamage() << endl;
+		cout << "DEFENCE POWER : " << GetDefence() << endl;
+		cout << "LEVEL : " << GetLevel() << endl;
+		cout << "XP : " << GetXP() << "/" << xpLimit << endl;
 		cout << "HEALING PORTION :" << healthPortion << endl;
 		cout << "COINS : " << coin << endl;
 	}
@@ -133,40 +121,40 @@ public:
 		randomHealing = (rand() % (healingUpperlimit - healingLowerLimit + 1)) + healingLowerLimit;
 		if (healthPortion != 0)
 		{
-			if (maxHealth == currentHealth)
-				cout << endl << name << "'s health is already full\n";
-			else if (currentHealth + randomHealing > maxHealth)
+			if (GetMaxHealth() == GetCurrentHealth())
+				cout << endl << GetName() << "'s health is already full\n";
+			else if (GetCurrentHealth() + randomHealing > GetMaxHealth())
 			{
 				int tempHeal;
-				tempHeal = (maxHealth - currentHealth);
-				currentHealth += tempHeal;
-				cout << "/n" << name << "'s health is added by " << tempHeal;
+				tempHeal = (GetMaxHealth() - GetCurrentHealth());
+				SetCurrentHealth(tempHeal);
+				cout << "/n" << GetName() << "'s health is added by " << tempHeal;
 				healthPortion--;
 			}
 			else
 			{
-				currentHealth += randomHealing;
-				cout << "\n" << name << "'s health is added by " << randomHealing;
+				SetCurrentHealth(randomHealing);
+				cout << "\n" << GetName() << "'s health is added by " << randomHealing;
 				healthPortion--;
 			}
 
 		}
 		else
 		{
-			cout << "YOU DO NOT HAVE ANY HEALTH PORTION TO HEAL";
+			cout << "\nYOU DO NOT HAVE ANY HEALTH PORTION TO HEAL";
 		}
 	}
 
 
-	void SetLevel()
+	void LevelCalculation()
 	{
-		while (experiencePoint >= xpLimit)
+		while (GetXP() >= xpLimit)
 		{
-			level++;
-			cout << "Your Level up to" << level << endl;
-			experiencePoint = experiencePoint - xpLimit;
+			SetLevel(1);
+			cout << "\nYour Level up to" << GetLevel() << endl;
+			SetXP(GetXP() - xpLimit);
 			xpLimit = xpLimit + (xpLimit * .3);
-			cout << "current XP" << experiencePoint << endl;
+			cout << "\ncurrent XP" << GetXP() << endl;
 			SetDamage();
 			SetDefence();
 		}
@@ -174,25 +162,25 @@ public:
 	void SetXp(int enemylevel)
 	{
 		int tempXp;
-		int tempLevel = level - enemylevel;
+		int tempLevel = GetLevel() - enemylevel;
 		if (tempLevel <= 0)
 		{
 			srand(time(0));
 			tempXp = (rand() % (5 - 1 + 1)) + 1;
-			experiencePoint += tempXp;
+			SetXP(GetXP() + tempXp);
 			cout << "Your XP increase by :" << tempXp;
-			SetLevel();
+			LevelCalculation();
 		}
 		else
 		{
-			experiencePoint += enemylevel;
+			SetXP(GetXP() + enemylevel);
 		}
 	}
 	void SetXp(int xp, int _xp)
 	{
-		experiencePoint += xp;
+		SetXP(GetXP() + xp);
 		cout << "Your XP increase by :" << xp;
-		SetLevel();
+		LevelCalculation();
 	}
 
 	~Wizard() {}
@@ -200,7 +188,7 @@ public:
 
 class Dragon : public Character
 {
-protected:
+private:
 	int healthPortionDropPercentage;
 	int healing;
 public:
@@ -211,8 +199,8 @@ public:
 	}
 	void Heal()
 	{
-		currentHealth += healing;
-		cout << "\n" << name << "'s health is added by " << healing;
+		SetCurrentHealth(healing);
+		cout << "\n" << GetName() << "'s health is added by " << healing;
 	}
 
 	void SetLevel(int _level, int area)
@@ -224,13 +212,13 @@ public:
 		tempLevel = (rand() % (maxHighLevel - maxLowLevel + 1)) + maxLowLevel;
 		if (tempLevel <= 0)
 		{
-			level = 1;
+			SetLevel(1);
 			SetDamage();
 			SetDefence();
 		}
 		else
 		{
-			level = tempLevel;
+			Character::SetLevel(tempLevel);
 			SetDamage();
 			SetDefence();
 		}
@@ -238,7 +226,7 @@ public:
 
 	void SetLevel(int _level)
 	{
-		level = _level;
+		Character::SetLevel(_level);
 		SetDamage();
 		SetDefence();
 	}
@@ -276,7 +264,7 @@ public:
 
 };
 
-class AAttack
+class SpecialAbility
 {
 private:
 	int fireball = 0;
@@ -367,8 +355,8 @@ private:
 	int reviveValue = 70;
 	int round;
 	int damage;
-	AAttack* playerAttack = new AAttack();
-	AAttack* enemyAttack = new AAttack();
+	SpecialAbility* playerAttack = new SpecialAbility();
+	SpecialAbility* enemyAttack = new SpecialAbility();
 	Wizard* player;
 	Dragon* enemy;
 	string name;
@@ -392,6 +380,26 @@ private:
 			}
 		}
 	}
+
+	int RunAwayFromAttack(Character* character1, Character* character2)
+	{
+		int totalAgility = character1->GetAgility() + character2->GetAgility();
+		int percentageOfAgility = (character1->GetAgility() * 100) / totalAgility;
+		int chance;
+		srand(time(0));
+		chance = rand() % 100;
+		if (chance <= percentageOfAgility)
+		{
+			cout << name << " \nRUN AWAY\n";
+			return 1;
+		}
+		else
+		{
+			cout << name << "\n TRY'S TO RAN AWAY SORRY BUT CAN'T RAN AWAY \n";
+			return 0;
+		}
+	}
+
 	void DisplayGameTitle()
 	{
 		cout << "\n				    	WIZARD ADVENTURE\n\n";
@@ -462,7 +470,7 @@ private:
 		}
 		else if (enemy->GetHealth() < health10Percentage)
 		{
-			run = enemy->RunAwayFromAttack(enemy, player);
+			run = RunAwayFromAttack(enemy, player);
 			if (run == 0)
 			{
 			}
@@ -476,27 +484,48 @@ private:
 		return run;
 	}
 
+	void SpecialAttack(Character* character1, Character* character2)
+	{
+		int damage = (character1->GetDamage() * (specialAttack * 2)) - character2->GetDefence();
+		character2->TakeDamage(damage);
+	}
+
+	void Attack(Character* character1, Character* character2)
+	{
+		int damage = (character1->GetDamage()) - character2->GetDefence();
+		character2->TakeDamage(damage);
+	}
+
 	void Damage(Character* character1, Character* character2, int specialAttack, char attack)
 	{
 		if (enemy->GetName() == "Adelaid-Inferno" && (attack == 'E' || attack == 'e'))
 		{
-			int damage = (character1->GetDamage()) - character2->GetDefence();
-			character2->TakeDamage(damage);
+			Attack(character1, character2);
 		}
 		else if (enemy->GetName() == "Smite-Aqua" && (attack == 'F' || attack == 'f'))
 		{
-			int damage = (character1->GetDamage()) - character2->GetDefence();
-			character2->TakeDamage(damage);
+			Attack(character1, character2);
 		}
 		else if (enemy->GetName() == "Darksmoke-Shadow" && (attack == 'S' || attack == 's'))
 		{
-			int damage = (character1->GetDamage()) - character2->GetDefence();
-			character2->TakeDamage(damage);
+			Attack(character1, character2);
 		}
 		else if (enemy->GetName() == "Arman-Terra" && (attack == 'W' || attack == 'w'))
 		{
-			int damage = (character1->GetDamage()) - character2->GetDefence();
-			character2->TakeDamage(damage);
+			Attack(character1, character2);
+		}
+		//special attack
+		if (enemy->GetName() == "Adelaid-Inferno" && (attack == 'W' || attack == 'w'))
+		{
+			SpecialAttack(character1, character2);
+		}
+		else if (enemy->GetName() == "Smite-Aqua" && (attack == 'E' || attack == 'e'))
+		{
+			SpecialAttack(character1, character2);
+		}
+		else if (enemy->GetName() == "Arman-Terra" && (attack == 'F' || attack == 'f'))
+		{
+			SpecialAttack(character1, character2);
 		}
 		else
 		{
@@ -530,7 +559,7 @@ private:
 			break;
 		case 3:
 		{
-			run = player->RunAwayFromAttack(player, enemy);
+			run = RunAwayFromAttack(player, enemy);
 			if (run == 0)
 				break;
 			else if (run == 1)
