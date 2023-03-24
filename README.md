@@ -27,3 +27,14 @@ The attack of dragon is all controlled by AI. Each area has a level of dragons t
 There are 2 types of characters in this game. Wizard and Dragon
 Both wizard and dragon have 3 option one is attack, two is heal and third one is run away from the battle
 
+#screenshotS
+
+![Capture1](/screenshot/1.png)
+![Capture1](/screenshot/2.png)
+![Capture1](/screenshot/3.png)
+![Capture1](/screenshot/4.png)
+![Capture1](/screenshot/5.png)
+![Capture1](/screenshot/6.png)
+![Capture1](/screenshot/7.png)
+![Capture1](/screenshot/8.png)
+![Capture1](/screenshot/9.png)
