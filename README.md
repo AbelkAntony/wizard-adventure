@@ -27,6 +27,8 @@ The attack of dragon is all controlled by AI. Each area has a level of dragons t
 There are 2 types of characters in this game. Wizard and Dragon
 Both wizard and dragon have 3 option one is attack, two is heal and third one is run away from the battle
 
+Here is my replit link : https://replit.com/@mrabelantony/WIZARD-ADVENTURE
+
 #screenshotS
 
 ![Capture1](/screenshot/1.png)
