@@ -30,6 +30,10 @@ Both wizard and dragon have 3 option one is attack, two is heal and third one is
 
 Here is my replit link : https://replit.com/@mrabelantony/WIZARD-ADVENTURE
 
+
+https://user-images.githubusercontent.com/122546743/234966530-0897a66a-4fae-446d-8fa7-192622715ee7.mp4
+
+
 #screenshotS
 
 ![Capture1](/screenshot/1.png)
