@@ -34,7 +34,7 @@ Here is my replit link : https://replit.com/@mrabelantony/WIZARD-ADVENTURE
 https://user-images.githubusercontent.com/122546743/234966530-0897a66a-4fae-446d-8fa7-192622715ee7.mp4
 
 
-#screenshotS
+# Screenshots
 
 ![Capture1](/screenshot/1.png)
 ![Capture1](/screenshot/2.png)
